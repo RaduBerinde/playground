@@ -19,6 +19,29 @@ type SomeType struct {
 
 func (t *SomeType) Cool() int { return t.x }
 
+func checkEquality(a SomeInterface, b SomeInterface) bool {
+	return reflect.ValueOf(a) == reflect.ValueOf(b)
+}
+
+func BenchmarkReflectValueFunc(b *testing.B) {
+	var arr [1000]SomeInterface
+
+	for i := 0; i < 1000; i++ {
+		arr[i] = &SomeType{i}
+	}
+
+	test := 0
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if checkEquality(arr[i%1000], arr[(i+1)%1000]) {
+			test++
+		}
+	}
+	if test != 0 {
+		b.Errorf("Equality!")
+	}
+}
+
 func BenchmarkReflectValue(b *testing.B) {
 	var arr [1000]SomeInterface
 
