@@ -7,3 +7,4 @@ Woof 5
 Woof 5
 --- PASS: TestSQL (0.00s)
 PASS
+ok  	github.com/RaduBerinde/playground/test_dep_prototype/sql	0.002s

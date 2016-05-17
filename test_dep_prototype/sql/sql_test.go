@@ -6,18 +6,18 @@ import (
 	"testing"
 
 	"github.com/RaduBerinde/playground/test_dep_prototype/server"
-	"github.com/RaduBerinde/playground/test_dep_prototype/server/testserver"
+	"github.com/RaduBerinde/playground/test_dep_prototype/server/testingshim"
 )
 
+// This is the kind of test we want to be able to run form the sql package.
 func TestSQL(t *testing.T) {
 	s := server.NewServer()
-	s.SqlSrv.Woof()
+	s.SQLSrvImpl.Woof()
 }
 
 func TestMain(m *testing.M) {
 	fmt.Printf("TestMain!\n")
-	s := server.NewServer()
-	testserver.TestSrvInstance.SqlSrv = s.SqlSrv
+	testingshim.InitTestServerFactory(server.TestServerFactory)
 	code := m.Run()
 	os.Exit(code)
 }
