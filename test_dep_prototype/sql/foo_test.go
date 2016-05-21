@@ -7,7 +7,7 @@ import (
 	"github.com/RaduBerinde/playground/test_dep_prototype/server/testingshim"
 )
 
-func TestA(t *testing.T) {
-	fmt.Printf("TestA\n")
+func TestFoo(t *testing.T) {
+	fmt.Printf("TestFoo\n")
 	testingshim.NewTestServer().SQLSrv().(*SQLServer).Woof()
 }
