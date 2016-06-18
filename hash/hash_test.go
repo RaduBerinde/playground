@@ -42,6 +42,7 @@
 package hash
 
 import (
+	"hash/crc32"
 	"hash/fnv"
 	"testing"
 
@@ -53,6 +54,7 @@ const (
 	FHV32a
 	FHV64
 	FHV64a
+	CRC32C
 	XX32
 	XX64
 )
@@ -61,6 +63,7 @@ var hashFNV32 = fnv.New32()
 var hashFNV32a = fnv.New32a()
 var hashFNV64 = fnv.New64()
 var hashFNV64a = fnv.New64a()
+var hashCRC32C = crc32.New(crc32.MakeTable(crc32.Castagnoli))
 var hashXX32 = xxhash.New32()
 var hashXX64 = xxhash.New64()
 
@@ -78,6 +81,9 @@ func hash(method int, buf []byte) {
 	case FHV64a:
 		hashFNV64a.Reset()
 		hashFNV64a.Write(buf)
+	case CRC32C:
+		hashCRC32C.Reset()
+		hashCRC32C.Write(buf)
 	case XX32:
 		hashXX32.Reset()
 		hashXX32.Write(buf)
@@ -145,6 +151,18 @@ func BenchmarkHash_FHV64a_1000(b *testing.B) {
 
 func BenchmarkHash_FHV64a_10000(b *testing.B) {
 	benchmarkHash(b, FHV64a, 10000)
+}
+
+func BenchmarkHash_CRC32C_10(b *testing.B) {
+	benchmarkHash(b, CRC32C, 10)
+}
+
+func BenchmarkHash_CRC32C_1000(b *testing.B) {
+	benchmarkHash(b, CRC32C, 1000)
+}
+
+func BenchmarkHash_CRC32C_10000(b *testing.B) {
+	benchmarkHash(b, CRC32C, 10000)
 }
 
 func BenchmarkHash_XX32_10(b *testing.B) {
