@@ -1,42 +1,48 @@
-// Results:
+// Results on a Haswell (i5-4670 3.4Ghz)
 // go 1.6.2:
-//   BenchmarkHash_FHV32_10-4    	100000000	        13.0 ns/op
-//   BenchmarkHash_FHV32_1000-4  	 1000000	      1161 ns/op
-//   BenchmarkHash_FHV32_10000-4 	  200000	     11587 ns/op
-//   BenchmarkHash_FHV32a_10-4   	100000000	        13.1 ns/op
-//   BenchmarkHash_FHV32a_1000-4 	 1000000	      1162 ns/op
-//   BenchmarkHash_FHV32a_10000-4	  200000	     11586 ns/op
-//   BenchmarkHash_FHV64_10-4    	100000000	        14.8 ns/op
-//   BenchmarkHash_FHV64_1000-4  	 1000000	      1163 ns/op
-//   BenchmarkHash_FHV64_10000-4 	  200000	     11604 ns/op
-//   BenchmarkHash_FHV64a_10-4   	100000000	        17.2 ns/op
-//   BenchmarkHash_FHV64a_1000-4 	 1000000	      1164 ns/op
-//   BenchmarkHash_FHV64a_10000-4	  200000	     11636 ns/op
-//   BenchmarkHash_XX32_10-4     	100000000	        14.0 ns/op
-//   BenchmarkHash_XX32_1000-4   	 3000000	       409 ns/op
-//   BenchmarkHash_XX32_10000-4  	  300000	      3977 ns/op
-//   BenchmarkHash_XX64_10-4     	100000000	        14.3 ns/op
-//   BenchmarkHash_XX64_1000-4   	 5000000	       250 ns/op
-//   BenchmarkHash_XX64_10000-4  	 1000000	      2363 ns/op
+//   BenchmarkHash_FHV32_10-4    	100000000	        14.0 ns/op
+//   BenchmarkHash_FHV32_1000-4  	 1000000	      1158 ns/op
+//   BenchmarkHash_FHV32_10000-4 	  100000	     11622 ns/op
+//   BenchmarkHash_FHV32a_10-4   	100000000	        13.2 ns/op
+//   BenchmarkHash_FHV32a_1000-4 	 1000000	      1163 ns/op
+//   BenchmarkHash_FHV32a_10000-4	  200000	     11629 ns/op
+//   BenchmarkHash_FHV64_10-4    	100000000	        14.9 ns/op
+//   BenchmarkHash_FHV64_1000-4  	 1000000	      1165 ns/op
+//   BenchmarkHash_FHV64_10000-4 	  100000	     11640 ns/op
+//   BenchmarkHash_FHV64a_10-4   	100000000	        14.9 ns/op
+//   BenchmarkHash_FHV64a_1000-4 	 1000000	      1167 ns/op
+//   BenchmarkHash_FHV64a_10000-4	  100000	     11668 ns/op
+//   BenchmarkHash_CRC32C_10-4   	100000000	        16.1 ns/op
+//   BenchmarkHash_CRC32C_1000-4 	20000000	       113 ns/op
+//   BenchmarkHash_CRC32C_10000-4	 1000000	      1118 ns/op
+//   BenchmarkHash_XX32_10-4     	100000000	        14.1 ns/op
+//   BenchmarkHash_XX32_1000-4   	 3000000	       408 ns/op
+//   BenchmarkHash_XX32_10000-4  	  300000	      3998 ns/op
+//   BenchmarkHash_XX64_10-4     	100000000	        14.4 ns/op
+//   BenchmarkHash_XX64_1000-4   	 5000000	       242 ns/op
+//   BenchmarkHash_XX64_10000-4  	 1000000	      2297 ns/op
 //
 // go 1.7:
-//   BenchmarkHash_FHV32_10-4       	100000000	        12.0 ns/op
-//   BenchmarkHash_FHV32_1000-4     	 1000000	      1155 ns/op
-//   BenchmarkHash_FHV32_10000-4    	  100000	     11621 ns/op
-//   BenchmarkHash_FHV32a_10-4      	100000000	        12.2 ns/op
-//   BenchmarkHash_FHV32a_1000-4    	 1000000	      1157 ns/op
-//   BenchmarkHash_FHV32a_10000-4   	  200000	     11594 ns/op
-//   BenchmarkHash_FHV64_10-4       	100000000	        14.1 ns/op
-//   BenchmarkHash_FHV64_1000-4     	 1000000	      1160 ns/op
-//   BenchmarkHash_FHV64_10000-4    	  200000	     11637 ns/op
-//   BenchmarkHash_FHV64a_10-4      	100000000	        14.5 ns/op
-//   BenchmarkHash_FHV64a_1000-4    	 1000000	      1160 ns/op
-//   BenchmarkHash_FHV64a_10000-4   	  200000	     11603 ns/op
-//   BenchmarkHash_XX32_10-4        	100000000	        11.4 ns/op
-//   BenchmarkHash_XX32_1000-4      	 5000000	       316 ns/op
-//   BenchmarkHash_XX32_10000-4     	  500000	      3106 ns/op
-//   BenchmarkHash_XX64_10-4        	100000000	        11.8 ns/op
-//   BenchmarkHash_XX64_1000-4      	20000000	       116 ns/op
+//   BenchmarkHash_FHV32_10-4       	100000000	        12.3 ns/op
+//   BenchmarkHash_FHV32_1000-4     	 1000000	      1160 ns/op
+//   BenchmarkHash_FHV32_10000-4    	  200000	     11614 ns/op
+//   BenchmarkHash_FHV32a_10-4      	100000000	        12.1 ns/op
+//   BenchmarkHash_FHV32a_1000-4    	 1000000	      1182 ns/op
+//   BenchmarkHash_FHV32a_10000-4   	  200000	     11640 ns/op
+//   BenchmarkHash_FHV64_10-4       	100000000	        13.6 ns/op
+//   BenchmarkHash_FHV64_1000-4     	 1000000	      1163 ns/op
+//   BenchmarkHash_FHV64_10000-4    	  200000	     11621 ns/op
+//   BenchmarkHash_FHV64a_10-4      	100000000	        14.0 ns/op
+//   BenchmarkHash_FHV64a_1000-4    	 1000000	      1185 ns/op
+//   BenchmarkHash_FHV64a_10000-4   	  100000	     11654 ns/op
+//   BenchmarkHash_CRC32C_10-4      	100000000	        15.9 ns/op
+//   BenchmarkHash_CRC32C_1000-4    	20000000	       113 ns/op
+//   BenchmarkHash_CRC32C_10000-4   	 1000000	      1095 ns/op
+//   BenchmarkHash_XX32_10-4        	100000000	        11.1 ns/op
+//   BenchmarkHash_XX32_1000-4      	 5000000	       301 ns/op
+//   BenchmarkHash_XX32_10000-4     	  500000	      2945 ns/op
+//   BenchmarkHash_XX64_10-4        	100000000	        12.1 ns/op
+//   BenchmarkHash_XX64_1000-4      	20000000	       108 ns/op
 //   BenchmarkHash_XX64_10000-4     	 2000000	       988 ns/op
 
 package hash
