@@ -206,3 +206,65 @@ func BenchmarkChan3a(b *testing.B) {
 	}
 	close(c)
 }
+
+type chanMeta2Msg struct {
+	data []int
+	meta *chanMeta
+}
+
+// Variant 4: single channel with larger metadata
+
+func receiverChan4(c <-chan chanMeta2Msg) {
+	for m := range c {
+		for x := range m.data {
+			sum += x
+		}
+		if m.meta != nil && m.meta.err != nil {
+			return
+		}
+	}
+}
+
+func BenchmarkChan4(b *testing.B) {
+	c := make(chan chanMeta2Msg, chanBuf)
+	go receiverChan4(c)
+	d := make([]int, 1)
+	for i := 0; i < b.N; i++ {
+		d[0] = i
+		c <- chanMeta2Msg{d, nil}
+	}
+	close(c)
+}
+
+// Variant 4a: single channel with larger metadata + ticker channel
+
+func receiverChan4a(c <-chan chanMeta2Msg, t <-chan time.Time) {
+	for {
+		select {
+		case m, ok := <-c:
+			if !ok {
+				return
+			}
+			for x := range m.data {
+				sum += x
+			}
+			if m.meta != nil && m.meta.err != nil {
+				return
+			}
+		case <-t:
+		}
+	}
+}
+
+func BenchmarkChan4a(b *testing.B) {
+	t := time.NewTicker(tickerPeriod)
+	defer t.Stop()
+	c := make(chan chanMeta2Msg, chanBuf)
+	go receiverChan4a(c, t.C)
+	d := make([]int, 1)
+	for i := 0; i < b.N; i++ {
+		d[0] = i
+		c <- chanMeta2Msg{d, nil}
+	}
+	close(c)
+}
