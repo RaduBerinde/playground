@@ -15,6 +15,7 @@ import (
 )
 
 const chanBuf = 10
+const tickerPeriod = 100 * time.Microsecond
 
 // Variant 1: single channel with multi-purpose message
 type chanMsg struct {
@@ -51,7 +52,10 @@ func BenchmarkChan1(b *testing.B) {
 func receiverChan1a(c <-chan chanMsg, t <-chan time.Time) {
 	for {
 		select {
-		case m := <-c:
+		case m, ok := <-c:
+			if !ok {
+				return
+			}
 			for x := range m.data {
 				sum += x
 			}
@@ -64,9 +68,10 @@ func receiverChan1a(c <-chan chanMsg, t <-chan time.Time) {
 }
 
 func BenchmarkChan1a(b *testing.B) {
-	t := time.Tick(100 * time.Microsecond)
+	t := time.NewTicker(tickerPeriod)
+	defer t.Stop()
 	c := make(chan chanMsg, chanBuf)
-	go receiverChan1a(c, t)
+	go receiverChan1a(c, t.C)
 	d := make([]int, 1)
 	for i := 0; i < b.N; i++ {
 		d[0] = i
@@ -107,7 +112,10 @@ func BenchmarkChan2(b *testing.B) {
 func receiverChan2a(dataChan <-chan []int, errChan <-chan error, t <-chan time.Time) {
 	for {
 		select {
-		case d := <-dataChan:
+		case d, ok := <-dataChan:
+			if !ok {
+				return
+			}
 			for x := range d {
 				sum += x
 			}
@@ -119,10 +127,11 @@ func receiverChan2a(dataChan <-chan []int, errChan <-chan error, t <-chan time.T
 }
 
 func BenchmarkChan2a(b *testing.B) {
-	t := time.Tick(100 * time.Microsecond)
+	t := time.NewTicker(tickerPeriod)
+	defer t.Stop()
 	dataChan := make(chan []int, chanBuf)
 	errChan := make(chan error)
-	go receiverChan2a(dataChan, errChan, t)
+	go receiverChan2a(dataChan, errChan, t.C)
 	d := make([]int, 1)
 	for i := 0; i < b.N; i++ {
 		d[0] = i
@@ -170,7 +179,10 @@ func BenchmarkChan3(b *testing.B) {
 func receiverChan3a(c <-chan chanMetaMsg, t <-chan time.Time) {
 	for {
 		select {
-		case m := <-c:
+		case m, ok := <-c:
+			if !ok {
+				return
+			}
 			for x := range m.data {
 				sum += x
 			}
@@ -183,9 +195,10 @@ func receiverChan3a(c <-chan chanMetaMsg, t <-chan time.Time) {
 }
 
 func BenchmarkChan3a(b *testing.B) {
-	t := time.Tick(100 * time.Microsecond)
+	t := time.NewTicker(tickerPeriod)
+	defer t.Stop()
 	c := make(chan chanMetaMsg, chanBuf)
-	go receiverChan3a(c, t)
+	go receiverChan3a(c, t.C)
 	d := make([]int, 1)
 	for i := 0; i < b.N; i++ {
 		d[0] = i
