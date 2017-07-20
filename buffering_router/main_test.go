@@ -45,9 +45,9 @@ func setupConsumers(tb testing.TB, k int) (*sync.WaitGroup, []chan row) {
 // https://github.com/cockroachdb/cockroach/pull/17105: each of the k goroutines
 // consumes rows via a channel
 func runOption1(b *testing.B, k int, withSema bool) {
-	// The semaphore makes sure the main routine blocks if all the consumers are
-	// blocked.
-	semaphore := make(chan struct{}, k)
+	// The semaphore makes sure that if all the consumers have buffered rows, one
+	// of them (and hence the main routine) blocks.
+	semaphore := make(chan struct{}, k-1)
 
 	wg, consumerChans := setupConsumers(b, k)
 
@@ -108,13 +108,7 @@ func runOption1(b *testing.B, k int, withSema bool) {
 	for rowIdx := 0; rowIdx < b.N; rowIdx++ {
 		r := row{val: rowIdx}
 		i := rand.Intn(k)
-		if withSema {
-			semaphore <- struct{}{}
-		}
 		internalChans[i] <- r
-		if withSema {
-			<-semaphore
-		}
 	}
 	for i := range internalChans {
 		close(internalChans[i])
