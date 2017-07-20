@@ -58,31 +58,40 @@ func runOption1(b *testing.B, k int, withSema bool) {
 		wg.Add(1)
 		go func(internalChan, consumerChan chan row) {
 			var buf []row
-			for r := range internalChan {
-				wasEmpty := (len(buf) == 0)
-				// Buffer the row.
-				buf = append(buf, r)
-				// Try to send, but don't block.
-				for sent := true; len(buf) > 0 && sent; {
+		Loop:
+			for {
+				if len(buf) > 0 {
+					if withSema {
+						// Acquire the semaphore when we have buffered rows.
+						semaphore <- struct{}{}
+					}
 					select {
 					case consumerChan <- buf[0]:
 						buf = buf[1:]
-					default:
-						sent = false
+					case r, ok := <-internalChan:
+						if !ok {
+							if withSema {
+								<-semaphore
+							}
+							break Loop
+						}
+						buf = append(buf, r)
 					}
-				}
-				isEmpty := (len(buf) == 0)
-				if withSema {
-					if wasEmpty && !isEmpty {
-						// Acquire the semaphore when we have buffered rows.
-						semaphore <- struct{}{}
-					} else if isEmpty && !wasEmpty {
-						// Release the semaphore when we no longer have buffered rows.
+					if withSema {
 						<-semaphore
 					}
+				} else {
+					r, ok := <-internalChan
+					if !ok {
+						break Loop
+					}
+					buf = append(buf, r)
 				}
 			}
 			if len(buf) > 0 {
+				if withSema {
+					semaphore <- struct{}{}
+				}
 				// Flush the buffer.
 				for _, r := range buf {
 					consumerChan <- r
@@ -114,8 +123,7 @@ func runOption1(b *testing.B, k int, withSema bool) {
 }
 
 func BenchmarkOption1(b *testing.B) {
-	// XXX option 1 deadlocks with semaphore!
-	for _, sema := range []bool{false} {
+	for _, sema := range []bool{false, true} {
 		name := "Semaphore"
 		if !sema {
 			name = "NoSemaphore"
