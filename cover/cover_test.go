@@ -5,6 +5,9 @@ import "testing"
 func TestFoo(t *testing.T) {
 	testCases := []struct{ a, b, exp int }{
 		{a: 10, b: 100, exp: 1000},
+		{a: 1, b: 100, exp: 10},
+		{a: 5, b: 5, exp: 100},
+		{a: 50, b: 5, exp: 55},
 	}
 
 	for _, tc := range testCases {
