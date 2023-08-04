@@ -2,22 +2,24 @@ name: Test
 
 on:
   pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
     branches:
-    - master
+      - master
 
 jobs:
-
   linux:
-    name: go-linux
+    name: test-job
     runs-on: ubuntu-latest
     env:
-      PR_NUMBER: ${{ github.event.number }}
+      PR_NUMBER_1: '${{ github.event.number }}'
+      PR_NUMBER: '${{ github.event.pull_request.number }}'
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: "1.20.1"
-
-    - run: bash -c 'echo $PR_NUMBER'
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.20.1
+      - run: bash -c 'echo $PR_NUMBER_1 $PR_NUMBER'
