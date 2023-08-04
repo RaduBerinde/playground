@@ -6,9 +6,8 @@ on:
     - master
 
 jobs:
-
   linux:
-    name: go-linux
+    name: test-job
     runs-on: ubuntu-latest
     env:
       PR_NUMBER: ${{ github.event.number }}
