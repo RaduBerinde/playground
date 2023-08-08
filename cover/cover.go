@@ -7,6 +7,7 @@ func Foo(a, b int) int {
 		}
 		return a * b
 	}
+	// Add a comment here.
 	if a == b {
 		return 100
 	}
