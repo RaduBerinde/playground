@@ -1,5 +1,6 @@
 package cover
 
+// Foo
 func Foo(a, b int) int {
 	if a < b {
 		if a == 1 {
